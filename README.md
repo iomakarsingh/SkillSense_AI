@@ -34,6 +34,66 @@ Navigate to **http://localhost:5173** and start your assessment.
 
 ---
 
+## 🌍 Deploy Globally (Production)
+
+Recommended setup:
+- Backend: Render (Web Service)
+- Frontend: Vercel (Static Vite app)
+
+### 1) Deploy Backend on Render
+
+Create a new **Web Service** from your repo and set:
+
+- Root Directory: `backend`
+- Build Command: `npm install`
+- Start Command: `npm start`
+
+Environment variables on Render:
+
+- `GROQ_API_KEY` = your Groq key
+- `NODE_ENV` = `production`
+- `PORT` = `5000` (optional; Render injects a port automatically)
+- `FRONTEND_URL` = your Vercel production URL (add later after frontend deploy)
+- `FRONTEND_ORIGINS` = optional comma-separated list of extra origins (preview URLs/custom domains)
+
+After deploy, copy your backend URL, for example:
+`https://skillsense-api.onrender.com`
+
+### 2) Deploy Frontend on Vercel
+
+Import the same repo in Vercel and set:
+
+- Root Directory: `frontend`
+- Build Command: `npm run build`
+- Output Directory: `dist`
+
+Frontend environment variable:
+
+- `VITE_API_URL` = your Render backend URL (for example `https://skillsense-api.onrender.com`)
+
+Deploy and copy your frontend URL, for example:
+`https://skillsense-ai.vercel.app`
+
+### 3) Final CORS Step
+
+Go back to Render backend env vars and set:
+
+- `FRONTEND_URL` = your Vercel URL
+
+If you use multiple domains, set:
+
+- `FRONTEND_ORIGINS` = `https://skillsense-ai.vercel.app,https://www.yourdomain.com`
+
+Redeploy backend once after updating env vars.
+
+### 4) Verify
+
+- Open frontend URL
+- Confirm upload/analyze/assessment/results all work
+- Check backend health endpoint: `/health`
+
+---
+
 ## 📁 Project Structure
 
 ```

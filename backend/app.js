@@ -14,19 +14,35 @@ const resultsRoutes = require('./routes/results');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const configuredOrigins = [
+  process.env.FRONTEND_URL,
+  ...(process.env.FRONTEND_ORIGINS || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean),
+];
+
+const allowedOrigins = Array.from(new Set(configuredOrigins));
+
 // ─── MIDDLEWARE ────────────────────────────────────────────────────────────────
 
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production'
-    ? process.env.FRONTEND_URL
-    : (origin, callback) => {
-        // Allow any localhost/127.0.0.1 origin in development
-        if (!origin || /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
-          callback(null, true);
-        } else {
-          callback(new Error('Not allowed by CORS'));
-        }
-      },
+  origin: (origin, callback) => {
+    // Browser-less/healthcheck clients
+    if (!origin) return callback(null, true);
+
+    // Local development convenience
+    if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+      return callback(null, true);
+    }
+
+    // Production frontend(s)
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error('Not allowed by CORS'));
+  },
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type'],
 }));
