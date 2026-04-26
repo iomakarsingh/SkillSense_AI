@@ -25,7 +25,7 @@ npm run dev        # Starts on http://localhost:5000
 ```bash
 cd frontend
 npm install
-npm run dev        # Starts on http://localhost:5173
+npm run dev        # Starts on http://localhost:5174
 ```
 
 ### 3. Open the App
