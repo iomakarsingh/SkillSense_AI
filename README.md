@@ -1,224 +1,327 @@
-# ⚡ SkillSense AI — Skill Assessment & Personalized Learning Plan Agent
+# ⚡ SkillSense AI
 
-A production-quality, full-stack AI system that extracts skills from your resume and a job description, conducts an adaptive technical assessment, computes scored results using a deterministic formula, and generates a personalized weekly learning roadmap.
+## AI-Powered Skill Assessment & Personalized Learning Plan Agent
+
+A production-quality, full-stack AI system that extracts skills from a resume and job description, performs adaptive technical assessment, computes deterministic scores, and generates a personalized learning roadmap.
 
 ---
 
-## 🚀 Quick Start
+# 🧠 Overview
+
+SkillSense AI bridges the gap between **claimed skills** and **actual ability**.
+
+It:
+
+* Compares Resume vs Job Description
+* Identifies missing and weak skills
+* Conducts adaptive skill assessment
+* Computes real skill scores
+* Generates a structured learning roadmap
+
+---
+
+# 🏗️ System Architecture
+
+```
+                ┌──────────────────────┐
+                │      Frontend        │
+                │   (React - Vite)     │
+                │----------------------│
+                │ Upload Resume & JD   │
+                │ Assessment UI        │
+                │ Results Dashboard    │
+                └─────────┬────────────┘
+                          │ REST API
+                          ▼
+                ┌──────────────────────┐
+                │       Backend        │
+                │   (Node + Express)   │
+                ├──────────────────────┤
+                │ Controllers          │
+                │ Services             │
+                │ Utils                │
+                └─────────┬────────────┘
+                          │
+        ┌─────────────────┼─────────────────┐
+        ▼                 ▼                 ▼
+   ┌───────────┐   ┌──────────────┐   ┌──────────────┐
+   │  AI Layer │   │ Gap Analysis │   │ Scoring Logic│
+   │  (Groq)   │   │ (Pure Logic) │   │ Deterministic│
+   └───────────┘   └──────────────┘   └──────────────┘
+```
+
+### Key Design Decisions
+
+* AI is used only for extraction, questioning, and evaluation
+* Gap analysis is handled using backend logic
+* Scoring is deterministic and computed server-side
+* Ensures consistency, reliability, and control
+
+---
+
+# ⚙️ Scoring & Logic
+
+## 🔹 Gap Analysis (Deterministic)
+
+* Missing Skills = JD Skills – Resume Skills
+* Weak Skills = Medium + Weak
+* Match % = (Matched Skills / Total JD Skills) × 100
+
+> This is computed using backend logic, not AI.
+
+---
+
+## 🔹 Adaptive Assessment
+
+For each weak/missing skill:
+
+1. Generate a question
+2. Evaluate answer
+3. Adjust difficulty
+
+| Score | Next Level |
+| ----- | ---------- |
+| < 5   | Easy       |
+| 5–7   | Medium     |
+| > 7   | Hard       |
+
+---
+
+## 🔹 Scoring Formula
+
+```
+Final Score = (Relevance × 0.4) 
+            + (Accuracy × 0.3) 
+            + (Depth × 0.3)
+```
+
+* AI provides raw scores
+* Final computation is done in backend
+
+---
+
+## 🔹 Reliability Mechanisms
+
+* JSON validation for all AI responses
+* Retry mechanism (3 attempts)
+* Controlled prompts
+* Session state management
+
+---
+
+# 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 18+
-- A **Groq API key** (free at [console.groq.com](https://console.groq.com))
 
-### 1. Clone & Set Up Backend
+* Node.js 18+
+* Groq API Key
+
+---
+
+### Backend Setup
 
 ```bash
 cd backend
 cp .env.example .env
-# Edit .env and add your GROQ_API_KEY
 npm install
-npm run dev        # Starts on http://localhost:5000
+npm run dev
 ```
 
-### 2. Set Up Frontend
+---
+
+### Frontend Setup
 
 ```bash
 cd frontend
 npm install
-npm run dev        # Starts on http://localhost:5174
+npm run dev
 ```
 
-### 3. Open the App
+---
 
-Navigate to **http://localhost:5174** and start your assessment.
+### Run Application
+
+Open:
+
+```
+http://localhost:5174
+```
 
 ---
 
-## 🌍 Deploy Globally (Production)
+# 🌍 Deployment
 
-Recommended setup:
-- Backend: Render (Web Service)
-- Frontend: Vercel (Static Vite app)
+### Backend (Recommended: Render)
 
-### 1) Deploy Backend on Render
+* Build: `npm install`
+* Start: `npm start`
 
-Create a new **Web Service** from your repo and set:
+### Frontend (Recommended: Vercel)
 
-- Root Directory: `backend`
-- Build Command: `npm install`
-- Start Command: `npm start`
+* Build: `npm run build`
+* Output: `dist`
 
-Environment variables on Render:
+### Environment Variables
 
-- `GROQ_API_KEY` = your Groq key
-- `NODE_ENV` = `production`
-- `PORT` = `5000` (optional; Render injects a port automatically)
-- `FRONTEND_URL` = your Vercel production URL (add later after frontend deploy)
-- `FRONTEND_ORIGINS` = optional comma-separated list of extra origins (preview URLs/custom domains)
+Backend:
 
-After deploy, copy your backend URL, for example:
-`https://skillsense-api.onrender.com`
+```
+GROQ_API_KEY=your_key
+NODE_ENV=production
+FRONTEND_URL=your_frontend_url
+```
 
-### 2) Deploy Frontend on Vercel
+Frontend:
 
-Import the same repo in Vercel and set:
-
-- Root Directory: `frontend`
-- Build Command: `npm run build`
-- Output Directory: `dist`
-
-Frontend environment variable:
-
-- `VITE_API_URL` = your Render backend URL (for example `https://skillsense-api.onrender.com`)
-
-Deploy and copy your frontend URL, for example:
-`https://skillsense-ai.vercel.app`
-
-### 3) Final CORS Step
-
-Go back to Render backend env vars and set:
-
-- `FRONTEND_URL` = your Vercel URL
-
-If you use multiple domains, set:
-
-- `FRONTEND_ORIGINS` = `https://skillsense-ai.vercel.app,https://www.yourdomain.com`
-
-Redeploy backend once after updating env vars.
-
-### 4) Verify
-
-- Open frontend URL
-- Confirm upload/analyze/assessment/results all work
-- Check backend health endpoint: `/health`
+```
+VITE_API_URL=your_backend_url
+```
 
 ---
 
-## 📁 Project Structure
+# 📁 Project Structure
 
 ```
 project/
 ├── backend/
 │   ├── controllers/
-│   │   ├── analyzeController.js      # POST /analyze
-│   │   ├── assessmentController.js   # POST /assessment/start|answer
-│   │   └── resultsController.js      # GET /results/:sessionId
 │   ├── routes/
-│   │   ├── analyze.js
-│   │   ├── assessment.js
-│   │   └── results.js
 │   ├── services/
-│   │   ├── aiService.js              # ALL LLM calls (Groq)
-│   │   ├── parsingService.js         # Skill normalization + gap analysis (NO AI)
-│   │   └── scoringService.js         # Weighted scoring math (NO AI)
+│   │   ├── aiService.js
+│   │   ├── parsingService.js
+│   │   └── scoringService.js
 │   ├── utils/
-│   │   ├── sessionStore.js           # In-memory session management
-│   │   ├── retryWrapper.js           # Exponential backoff retry
-│   │   └── validator.js              # Input validation + JSON parsing
-│   ├── .env                          # GROQ_API_KEY=your_key
-│   └── app.js                        # Express entry point
+│   └── app.js
 │
 └── frontend/
-    └── src/
-        ├── pages/
-        │   ├── LandingPage.jsx       # Hero + features + CTA
-        │   ├── UploadPage.jsx        # Resume + JD text input
-        │   ├── ProcessingPage.jsx    # Animated loading screen
-        │   ├── AssessmentPage.jsx    # Chat-style assessment UI
-        │   └── ResultsDashboard.jsx  # Match %, scores, gaps, roadmap
-        ├── components/
-        │   ├── SkillBadge.jsx        # Strength-coded chip
-        │   ├── ScoreCard.jsx         # Per-skill score breakdown
-        │   ├── GapChart.jsx          # Skill alignment bar chart
-        │   ├── ChatBubble.jsx        # Question/answer/feedback bubbles
-        │   └── LearningPlan.jsx      # Weekly roadmap cards
-        ├── context/SessionContext.jsx # Global state (useReducer)
-        └── services/api.js           # Axios API wrappers
+    ├── pages/
+    ├── components/
+    ├── context/
+    └── services/
 ```
 
 ---
 
-## 🔌 API Reference
+# 🔌 API Reference
 
 ### POST /analyze
-```json
-// Request
-{ "resume": "...", "jd": "..." }
 
-// Response
+```json
 {
-  "sessionId": "uuid",
-  "matchPercentage": 62,
-  "strongSkills": ["Python", "React"],
-  "weakSkills": ["Docker"],
-  "missingSkills": ["Kubernetes", "GraphQL"],
-  "skillMatrix": [{ "skill": "Docker", "status": "present", "strength": "Weak" }]
+  "resume": "...",
+  "jd": "..."
 }
 ```
 
+Response:
+
+```json
+{
+  "matchPercentage": 62,
+  "strongSkills": ["React"],
+  "weakSkills": ["Docker"],
+  "missingSkills": ["MongoDB"]
+}
+```
+
+---
+
 ### POST /assessment/start
+
 ```json
 { "sessionId": "uuid" }
-// Response: { skill, question, difficulty, questionIndex, totalQuestions }
 ```
+
+---
 
 ### POST /assessment/answer
+
 ```json
-{ "sessionId": "uuid", "answer": "CMD sets default command..." }
-// Response: { evaluation, score, nextQuestion, difficulty, done }
+{ "sessionId": "uuid", "answer": "..." }
 ```
+
+---
 
 ### GET /results/:sessionId
+
+Returns final scores + learning plan
+
+---
+
+# 📊 Sample Input & Output
+
+## Input
+
+Resume:
+
+```
+React developer with JavaScript experience
+```
+
+Job Description:
+
+```
+Looking for React, Node.js, MongoDB developer
+```
+
+---
+
+## Output (Analysis)
+
 ```json
-// Response: { matchPercentage, overallScore, skillScores, learningPlan, ... }
+{
+  "matchPercentage": 50,
+  "strongSkills": ["React"],
+  "weakSkills": ["JavaScript"],
+  "missingSkills": ["Node.js", "MongoDB"]
+}
 ```
 
 ---
 
-## 🧠 Scoring Formula
+## Output (Evaluation)
 
-All scoring is computed server-side. AI only returns the three raw scores.
-
+```json
+{
+  "relevance": 7,
+  "accuracy": 6,
+  "depth": 5,
+  "finalScore": 6.1
+}
 ```
-finalScore = (relevance × 0.4) + (accuracy × 0.3) + (depth × 0.3)
+
+---
+
+## Output (Learning Plan)
+
+```json
+{
+  "week": 1,
+  "focus": "Node.js Basics",
+  "topics": ["Event Loop", "Async Programming"]
+}
 ```
 
-| Dimension | Weight | Meaning |
-|---|---|---|
-| Relevance | 40% | Did the answer address the question? |
-| Accuracy | 30% | Were the technical facts correct? |
-| Depth | 30% | How thoroughly was it explained? |
+---
+
+# 🎯 Key Highlights
+
+* Hybrid AI + deterministic system
+* Adaptive questioning mechanism
+* Backend-controlled scoring
+* Reliable AI handling
+* Real-world hiring use-case
 
 ---
 
-## 🔒 Environment Variables
+# 🚀 Conclusion
 
-| Variable | Description |
-|---|---|
-| `GROQ_API_KEY` | **Required.** Your Groq API key |
-| `PORT` | Backend port (default: 5000) |
-| `NODE_ENV` | `development` or `production` |
-| `FRONTEND_URL` | Frontend URL for CORS in production |
+SkillSense AI goes beyond resume screening by:
 
----
+* Evaluating real technical skills
+* Providing measurable scoring
+* Delivering structured learning plans
 
-## 🏗️ Architecture Principles
-
-- **AI is isolated** — only `aiService.js` talks to Groq. No AI calls in controllers.
-- **Gap analysis is deterministic** — `parsingService.js` uses pure JS math. Match % never depends on AI.
-- **Scoring is server-side only** — `scoringService.js` formula, not delegated to the LLM.
-- **All AI responses are JSON-validated** — `parseAndValidateJSON()` strips markdown and validates schema.
-- **3-attempt retry with exponential backoff** — wraps every LLM call.
-- **Sessions are in-memory** — swap `sessionStore.js` Map for Redis/MongoDB without changing the interface.
+It can be extended into a full-scale **AI hiring assistant platform**.
 
 ---
-
-## 🎨 Frontend Pages
-
-| Route | Page | Description |
-|---|---|---|
-| `/` | Landing | Hero, features, flow diagram |
-| `/upload` | Upload | Resume + JD textarea inputs |
-| `/processing` | Processing | Animated loading during AI analysis |
-| `/assessment` | Assessment | Chat-style adaptive Q&A |
-| `/results` | Dashboard | Match ring, score cards, gap chart, roadmap |
