@@ -30,7 +30,7 @@ npm run dev        # Starts on http://localhost:5173
 
 ### 3. Open the App
 
-Navigate to **http://localhost:5173** and start your assessment.
+Navigate to **http://localhost:5174** and start your assessment.
 
 ---
 
