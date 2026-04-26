@@ -1,0 +1,144 @@
+/* ThemeToggle.css — Animated pill toggle */
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: var(--font-sans);
+}
+
+/* ── Track (pill shape) ── */
+.theme-toggle-track {
+  display: flex;
+  align-items: center;
+  width: 52px;
+  height: 28px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  position: relative;
+  transition: background 300ms ease, border-color 300ms ease;
+  flex-shrink: 0;
+}
+
+.theme-toggle:hover .theme-toggle-track {
+  border-color: var(--color-primary);
+  background: var(--color-primary-glow2);
+}
+
+/* ── Sliding thumb ── */
+.theme-toggle-thumb {
+  position: absolute;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 320ms var(--ease-spring), background 300ms ease;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Dark mode: thumb on left, dark bg */
+.theme-toggle-thumb[data-theme="dark"] {
+  transform: translateX(0px);
+  background: hsl(226, 24%, 20%);
+  color: hsl(220, 80%, 75%);
+}
+
+/* Light mode: thumb on right, bright bg */
+.theme-toggle-thumb[data-theme="light"] {
+  transform: translateX(24px);
+  background: hsl(45, 95%, 55%);
+  color: hsl(30, 90%, 30%);
+}
+
+/* ── Icons ── */
+.theme-icon {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+/* Sun visible in light mode */
+.theme-icon-sun  { opacity: 0; transform: rotate(-30deg) scale(0.8); }
+.theme-icon-moon { opacity: 1; transform: rotate(0deg)  scale(1);   }
+
+[data-theme="light"] .theme-icon-sun  { opacity: 1; transform: rotate(0deg)   scale(1);   }
+[data-theme="light"] .theme-icon-moon { opacity: 0; transform: rotate(30deg)  scale(0.8); }
+
+/* ── Label ── */
+.theme-toggle-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: color var(--transition-fast);
+  user-select: none;
+  white-space: nowrap;
+}
+.theme-toggle:hover .theme-toggle-label { color: var(--text-primary); }
+
+/* ══════════════════════════════════════════════
+   FLOATING WRAPPER — responsive positioning
+══════════════════════════════════════════════ */
+.theme-toggle-float {
+  position: fixed;
+  top: 14px;
+  right: 20px;
+  z-index: 300;
+
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  padding: 7px 14px;
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition:
+    background 300ms ease,
+    border-color 300ms ease,
+    box-shadow 300ms ease,
+    top 300ms ease,
+    bottom 300ms ease;
+}
+
+/* Tablet portrait — stays top-right but give more gap from edges */
+@media (max-width: 768px) {
+  .theme-toggle-float {
+    top: 12px;
+    right: 14px;
+    padding: 6px 12px;
+  }
+}
+
+/* Mobile — move to BOTTOM-right to avoid navbar conflicts */
+@media (max-width: 480px) {
+  .theme-toggle-float {
+    top: auto;
+    bottom: 20px;
+    right: 16px;
+    padding: 8px 12px;
+    box-shadow: var(--shadow-lg);
+  }
+  /* Label hidden on mobile */
+  .theme-toggle-label { display: none; }
+  /* Slightly smaller track on mobile */
+  .theme-toggle-track {
+    width: 46px;
+    height: 26px;
+  }
+  .theme-toggle-thumb {
+    width: 20px;
+    height: 20px;
+  }
+  .theme-toggle-thumb[data-theme="light"] {
+    transform: translateX(20px);
+  }
+}

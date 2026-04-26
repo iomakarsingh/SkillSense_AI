@@ -1,0 +1,383 @@
+.upload-page {
+  min-height: 100vh;
+  padding: var(--space-xl) 0 var(--space-3xl);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ── Background orbs ── */
+.upload-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+.upload-bg .bg-orb-1 {
+  position: absolute;
+  width: 500px; height: 500px;
+  top: -100px; right: -100px;
+  background: radial-gradient(circle, hsl(258,90%,62%), transparent 70%);
+  filter: blur(100px); opacity: 0.08;
+}
+.upload-bg .bg-orb-2 {
+  position: absolute;
+  width: 400px; height: 400px;
+  bottom: 0; left: -100px;
+  background: radial-gradient(circle, hsl(185,90%,55%), transparent 70%);
+  filter: blur(100px); opacity: 0.06;
+}
+
+/* ── Header ── */
+.upload-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--space-2xl);
+  gap: var(--space-lg);
+}
+.upload-title-block { flex: 1; }
+.upload-title-block h1 { font-size: clamp(1.4rem, 3vw, 2rem); margin-bottom: var(--space-sm); }
+.upload-title-block p  { font-size: 0.95rem; }
+
+/* ── Grid ── */
+.upload-form {}
+.upload-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xl);
+  margin-bottom: var(--space-xl);
+}
+.upload-field { display: flex; flex-direction: column; gap: var(--space-md); }
+
+/* ── Field label row ── */
+.field-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.upload-label { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); }
+.char-pill {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-success);
+  background: var(--color-success-bg);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+
+/* ══════════════════════════════════════════════════
+   UPLOAD ZONE — the hero element
+══════════════════════════════════════════════════ */
+.upload-zone {
+  position: relative;
+  border-radius: var(--radius-lg);
+  padding: var(--space-2xl) var(--space-xl);
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+  transition: all var(--transition-base);
+
+  /* Default: gradient border via box-shadow + background */
+  background: var(--bg-card);
+  border: 2px dashed transparent;
+  background-clip: padding-box;
+
+  /* Glowing gradient border */
+  box-shadow:
+    0 0 0 2px hsla(258, 90%, 62%, 0.4),
+    inset 0 0 0 1px hsla(258, 90%, 62%, 0.08);
+}
+
+/* Animated gradient background blobs */
+.uz-bg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.uz-blob {
+  position: absolute;
+  border-radius: var(--radius-full);
+  filter: blur(40px);
+  opacity: 0.15;
+  animation: float 4s ease-in-out infinite;
+}
+.uz-blob-1 {
+  width: 200px; height: 200px;
+  top: -40px; left: -40px;
+  background: hsl(258, 90%, 62%);
+}
+.uz-blob-2 {
+  width: 160px; height: 160px;
+  bottom: -30px; right: -30px;
+  background: hsl(185, 90%, 55%);
+  animation-delay: 2s;
+  animation-direction: reverse;
+}
+
+/* Hover state */
+.upload-zone:hover:not(.uz-disabled):not(.uz-parsing):not(.uz-success) {
+  transform: translateY(-3px);
+  box-shadow:
+    0 0 0 2px hsla(258, 90%, 62%, 0.8),
+    0 12px 40px hsla(258, 90%, 62%, 0.2),
+    inset 0 0 0 1px hsla(258, 90%, 62%, 0.15);
+}
+.upload-zone:focus:not(.uz-disabled) {
+  box-shadow:
+    0 0 0 3px hsla(258, 90%, 62%, 0.9),
+    0 12px 40px hsla(258, 90%, 62%, 0.25);
+}
+
+/* Dragging */
+.upload-zone.uz-dragging {
+  transform: scale(1.02);
+  box-shadow:
+    0 0 0 3px var(--color-accent),
+    0 16px 48px hsla(185, 90%, 55%, 0.3);
+  background: hsla(185, 90%, 55%, 0.06);
+}
+
+/* Success */
+.upload-zone.uz-success {
+  cursor: default;
+  background: var(--color-success-bg);
+  box-shadow: 0 0 0 2px var(--color-success), 0 8px 24px hsla(145, 65%, 48%, 0.15);
+}
+.upload-zone.uz-success:hover { transform: none; }
+
+/* Error */
+.upload-zone.uz-error {
+  box-shadow: 0 0 0 2px var(--color-danger), 0 8px 24px hsla(0, 80%, 60%, 0.12);
+  background: var(--color-danger-bg);
+}
+
+/* Parsing */
+.upload-zone.uz-parsing { cursor: wait; }
+
+/* Disabled */
+.upload-zone.uz-disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Inner content ── */
+.uz-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  text-align: center;
+  min-height: 140px;
+}
+.uz-inner-success { flex-direction: row; text-align: left; gap: var(--space-lg); }
+
+.uz-icon-wrap {
+  width: 64px; height: 64px;
+  border-radius: var(--radius-full);
+  background: var(--gradient-card);
+  border: 1px solid var(--border-focus);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary-light);
+  margin-bottom: var(--space-sm);
+  box-shadow: var(--shadow-primary);
+  transition: all var(--transition-base);
+}
+.upload-zone:hover .uz-icon-wrap {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 12px 32px hsla(258, 90%, 62%, 0.35);
+}
+
+.uz-icon { font-size: 2rem; margin-bottom: var(--space-sm); }
+
+.uz-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+.uz-sub {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+.uz-browse-link {
+  color: var(--color-primary-light);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.uz-formats {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+.uz-fmt {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+
+/* Success state */
+.uz-check {
+  width: 40px; height: 40px;
+  border-radius: var(--radius-full);
+  background: var(--color-success);
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.uz-file-details { flex: 1; min-width: 0; }
+.uz-filename {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--color-success);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0 0 4px;
+}
+.uz-filemeta {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+.uz-clear-btn {
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-success);
+  background: transparent;
+  color: var(--color-success);
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.uz-clear-btn:hover { background: var(--color-success); color: white; }
+
+/* Error state */
+.uz-error-text { color: var(--color-danger); }
+.uz-retry-btn {
+  margin-top: var(--space-sm);
+  padding: 6px 16px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-danger);
+  background: transparent;
+  color: var(--color-danger);
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.uz-retry-btn:hover { background: var(--color-danger); color: white; }
+
+/* Spinner inside zone */
+.uz-spinner {
+  width: 36px; height: 36px;
+  border: 3px solid var(--color-primary-glow);
+  border-top-color: var(--color-primary-light);
+  border-radius: var(--radius-full);
+  animation: spin 0.7s linear infinite;
+}
+
+/* ── OR divider ── */
+.or-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+.or-line { flex: 1; height: 1px; background: var(--border); }
+.or-label { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; }
+
+/* ── Textarea ── */
+.upload-textarea {
+  width: 100%;
+  resize: vertical;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.7;
+  min-height: 200px;
+}
+.upload-textarea.error { border-color: var(--color-danger); }
+.upload-textarea.error:focus { box-shadow: 0 0 0 3px var(--color-danger-bg); }
+
+/* ── Field error ── */
+.field-error { display: block; font-size: 0.8rem; color: var(--color-danger); }
+
+/* ── API error banner ── */
+.api-error-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-danger-bg);
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius-md);
+  color: var(--color-danger);
+  font-size: 0.9rem;
+  margin-bottom: var(--space-md);
+}
+.api-error-banner span:nth-child(2) { flex: 1; }
+
+/* ── Actions ── */
+.upload-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+.upload-hint { display: flex; align-items: center; gap: var(--space-sm); font-size: 0.88rem; }
+
+/* Submit spinner */
+.spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: var(--radius-full);
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════ */
+
+/* Tablet landscape */
+@media (max-width: 1024px) {
+  .upload-grid { grid-template-columns: 1fr; }
+}
+
+/* Tablet portrait */
+@media (max-width: 768px) {
+  .upload-page   { padding: var(--space-lg) 0 var(--space-2xl); }
+  .upload-header { flex-direction: column; align-items: center; text-align: center; gap: var(--space-md); }
+  .upload-header .section-label { margin: 0 auto; }
+  .upload-zone   { padding: var(--space-lg) var(--space-md); }
+  .uz-inner      { min-height: 110px; }
+  .uz-icon-wrap  { width: 52px; height: 52px; }
+  .upload-textarea { min-height: 150px; }
+  .upload-actions { flex-direction: column; align-items: stretch; gap: var(--space-sm); }
+  .upload-actions .btn { width: 100%; justify-content: center; }
+  .uz-inner-success { flex-direction: column; text-align: center; align-items: center; }
+}
+
+/* Mobile portrait */
+@media (max-width: 480px) {
+  .upload-page   { padding: var(--space-md) 0 var(--space-xl); }
+  .upload-title-block h1 { font-size: 1.3rem; }
+  .upload-zone   { padding: var(--space-md); }
+  .uz-inner      { min-height: 90px; gap: var(--space-xs); }
+  .uz-icon-wrap  { width: 44px; height: 44px; font-size: 1.2rem; margin-bottom: var(--space-xs); }
+  .uz-title      { font-size: 0.9rem; }
+  .uz-sub        { font-size: 0.8rem; }
+  .upload-textarea { min-height: 120px; font-size: 0.78rem; }
+  .upload-hint   { display: none; }
+  .or-divider    { margin: var(--space-sm) 0; }
+  .upload-grid   { gap: var(--space-md); }
+}

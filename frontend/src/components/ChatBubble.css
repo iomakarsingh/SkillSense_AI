@@ -1,0 +1,195 @@
+/* ChatBubble.css — Polished chat bubbles v2 */
+
+/* ── Wrapper ── */
+.bubble-wrapper {
+  display: flex;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+  align-items: flex-start;
+  animation: slide-up 0.35s var(--ease-out) both;
+}
+.bubble-answer { flex-direction: row-reverse; }
+
+/* ── Avatar ── */
+.bubble-avatar {
+  width: 34px; height: 34px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.bubble-avatar-ai {
+  background: var(--gradient-hero);
+  color: white;
+  box-shadow: var(--shadow-primary);
+  font-size: 0.85rem;
+}
+.bubble-avatar-user {
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-strong);
+  font-size: 0.65rem;
+  letter-spacing: 0.02em;
+}
+
+/* ── Content ── */
+.bubble-content { max-width: 82%; }
+.bubble-content-right { margin-left: auto; }
+
+/* ── Meta (skill + difficulty tag) ── */
+.bubble-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.difficulty-pip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  font-family: var(--font-mono);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.new-skill-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.7rem;
+  color: var(--color-accent-light);
+  font-weight: 700;
+  background: var(--color-accent-glow);
+  border: 1px solid hsla(187,88%,53%,0.25);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+/* ── Bubble text ── */
+.bubble-text {
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  line-height: 1.65;
+  font-size: 0.93rem;
+}
+.bubble-text p { margin: 0; color: var(--text-primary); }
+
+.bubble-text-ai {
+  background: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  border-top-left-radius: var(--radius-xs);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-xs);
+}
+
+.bubble-text-user {
+  background: linear-gradient(135deg, hsla(258,88%,64%,0.18), hsla(187,88%,53%,0.12));
+  border: 1px solid var(--border-focus);
+  border-top-right-radius: var(--radius-xs);
+  color: var(--text-primary);
+}
+
+/* ── Feedback bubble ── */
+.bubble-feedback .bubble-content { max-width: 72%; }
+
+.feedback-bubble {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  border-top-left-radius: var(--radius-xs);
+  overflow: hidden;
+  box-shadow: var(--shadow-xs);
+}
+
+.feedback-bubble-header {
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+}
+
+.feedback-score-badge {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  line-height: 1;
+}
+.feedback-score-num {
+  font-size: 1.8rem;
+  font-weight: 900;
+  font-family: var(--font-mono);
+  letter-spacing: -0.04em;
+}
+.feedback-score-denom {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.feedback-grade-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: var(--radius-full);
+}
+.feedback-grade-label.grade-great   { background: var(--color-success-bg); color: var(--color-success-light); }
+.feedback-grade-label.grade-ok      { background: var(--color-warning-bg); color: var(--color-warning); }
+.feedback-grade-label.grade-weak    { background: var(--color-danger-bg);  color: var(--color-danger); }
+
+.feedback-bubble-body {
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.feedback-text p {
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.55;
+}
+
+.feedback-dims {
+  display: flex;
+  gap: var(--space-2);
+}
+.feedback-dim {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 5px 12px;
+  flex: 1;
+}
+.feedback-dim-val {
+  font-size: 0.95rem;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+}
+.feedback-dim-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}

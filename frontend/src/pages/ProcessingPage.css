@@ -1,0 +1,365 @@
+/* ProcessingPage.css — 3-phase animated reveal */
+
+/* ── Page shell ── */
+.processing-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-base);
+}
+
+/* ── Confetti canvas ── */
+.confetti-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+}
+
+/* ── Background orbs ── */
+.pp-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+.pp-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.1;
+}
+.pp-orb-1 {
+  width: 600px; height: 600px;
+  top: -150px; left: -100px;
+  background: hsl(258, 88%, 60%);
+  animation: float 10s ease-in-out infinite;
+}
+.pp-orb-2 {
+  width: 500px; height: 500px;
+  bottom: -100px; right: -100px;
+  background: hsl(187, 88%, 50%);
+  animation: float 8s ease-in-out infinite reverse;
+}
+
+/* ── Panel base ── */
+.pp-panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+  padding: var(--space-8) var(--space-6);
+  z-index: 1;
+  transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out);
+}
+
+/* ── Loading panel transitions ── */
+.pp-loading-panel {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.pp-loading-panel.pp-exit {
+  opacity: 0;
+  transform: translateY(-30px) scale(0.97);
+  pointer-events: none;
+}
+
+/* ── Reveal panel transitions ── */
+.pp-reveal-panel {
+  opacity: 0;
+  transform: translateY(40px) scale(0.94);
+  pointer-events: none;
+}
+.pp-reveal-panel.pp-enter {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+  transition-delay: 200ms;
+}
+.pp-reveal-panel.pp-exit-down {
+  opacity: 0;
+  transform: translateY(-20px) scale(1.03);
+  transition-delay: 0ms;
+}
+
+/* ═══════════════════════════════════════════
+   LOADING PANEL
+═══════════════════════════════════════════ */
+.pp-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-2);
+}
+.pp-logo-badge {
+  width: 30px; height: 30px;
+  border-radius: var(--radius-sm);
+  background: var(--gradient-hero);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  box-shadow: var(--shadow-primary);
+}
+
+/* Ring spinner */
+.pp-spinner-wrap {
+  position: relative;
+  width: 80px; height: 80px;
+  margin: var(--space-2) 0;
+}
+.pp-ring-spinner {
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, hsl(258,88%,64%) 0%, hsl(187,88%,53%) 40%, transparent 60%);
+  animation: spin 1.1s linear infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pp-ring-spinner-inner {
+  width: 58px; height: 58px;
+  border-radius: 50%;
+  background: var(--bg-base);
+}
+
+/* Loading title & sub */
+.pp-loading-title {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-align: center;
+}
+.pp-loading-sub {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  text-align: center;
+  max-width: 380px;
+}
+
+/* Processing steps */
+.pp-steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+  max-width: 340px;
+}
+.pp-step {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+}
+.pp-step-icon { font-size: 1rem; flex-shrink: 0; }
+.pp-step-label { flex: 1; color: var(--text-secondary); }
+.pp-step-loader {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  flex-shrink: 0;
+}
+.pp-step-loader span {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--color-primary-light);
+  animation: blink-dots 1.4s ease-in-out infinite;
+}
+.pp-step-loader span:nth-child(2) { animation-delay: 0.2s; }
+.pp-step-loader span:nth-child(3) { animation-delay: 0.4s; }
+
+/* Bottom progress bar */
+.pp-progress-bar {
+  width: 100%;
+  max-width: 340px;
+  height: 4px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+.pp-progress-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: var(--gradient-hero);
+  animation: pp-progress-sweep 18s linear forwards;
+}
+
+@keyframes pp-progress-sweep {
+  0%   { width: 0%; }
+  70%  { width: 85%; }
+  100% { width: 95%; }
+}
+
+/* ═══════════════════════════════════════════
+   REVEAL PANEL — Ring Hero
+═══════════════════════════════════════════ */
+
+/* The giant ring — positioned at center, scales up on enter */
+.pp-ring-hero {
+  position: relative;
+  width: 230px; height: 230px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: ring-hero-pop 0.6s var(--ease-spring) both;
+  animation-delay: 200ms;
+}
+
+@keyframes ring-hero-pop {
+  0%   { transform: scale(0.5); opacity: 0; }
+  60%  { transform: scale(1.08); }
+  100% { transform: scale(1);    opacity: 1; }
+}
+
+.pp-ring-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* SVG arc animated via inline stroke-dashoffset */
+.pp-arc {
+  transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: stroke-dashoffset;
+}
+
+/* Center content */
+.pp-ring-center {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: fade-in 0.4s ease both;
+  animation-delay: 400ms;
+}
+
+.pp-ring-num {
+  font-size: 3.8rem;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.pp-ring-pct-sign {
+  font-size: 1.4rem;
+  font-weight: 700;
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-top: -4px;
+}
+.pp-ring-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-top: var(--space-1);
+}
+
+/* Pulsing glow ring behind the SVG */
+.pp-ring-hero::before {
+  content: '';
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  background: radial-gradient(circle, hsla(258,88%,64%,0.12), transparent 70%);
+  animation: glow-pulse 2.5s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+/* ── Match label ── */
+.pp-match-label {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 500ms ease, transform 500ms ease;
+  transition-delay: 1600ms;
+}
+.pp-match-label.pp-label-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Skill chips ── */
+.pp-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  justify-content: center;
+  max-width: 440px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 500ms ease, transform 500ms ease;
+  transition-delay: 2000ms;
+}
+.pp-chips.pp-chips-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.pp-chip {
+  font-size: 0.82rem !important;
+  animation: chip-pop 0.4s var(--ease-spring) both;
+}
+.pp-chip:nth-child(1) { animation-delay: 2100ms; }
+.pp-chip:nth-child(2) { animation-delay: 2200ms; }
+.pp-chip:nth-child(3) { animation-delay: 2300ms; }
+.pp-chip:nth-child(4) { animation-delay: 2400ms; }
+.pp-chip:nth-child(5) { animation-delay: 2500ms; }
+.pp-chip:nth-child(6) { animation-delay: 2600ms; }
+.pp-chip:nth-child(7) { animation-delay: 2700ms; }
+
+@keyframes chip-pop {
+  0%   { transform: scale(0.6) translateY(6px); opacity: 0; }
+  70%  { transform: scale(1.08); }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* ── Sub label ── */
+.pp-reveal-sub {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-align: center;
+  opacity: 0;
+  transition: opacity 600ms ease;
+  transition-delay: 2800ms;
+}
+.pp-reveal-sub-visible { opacity: 1; }
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .pp-ring-hero { width: 200px; height: 200px; }
+  .pp-ring-num  { font-size: 3.4rem; }
+  .pp-steps     { max-width: 100%; padding: 0 var(--space-2); }
+  .pp-progress-bar { max-width: 100%; }
+  .pp-chips     { max-width: 100%; }
+  .pp-match-label { font-size: 1.1rem; }
+}
+@media (max-width: 480px) {
+  .pp-panel     { padding: var(--space-5) var(--space-4); }
+  .pp-ring-hero { width: 170px; height: 170px; }
+  .pp-ring-num  { font-size: 2.8rem; }
+  .pp-ring-pct-sign { font-size: 1.1rem; }
+  .pp-loading-title { font-size: 1.2rem; }
+  .pp-loading-sub   { font-size: 0.85rem; }
+  .pp-step      { padding: var(--space-2) var(--space-3); }
+  .pp-step-label{ font-size: 0.8rem; }
+}

@@ -1,0 +1,76 @@
+.score-card {
+  animation: slide-up 0.4s ease both;
+}
+.score-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--space-lg);
+}
+.score-card-skill {
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+.score-card-count { font-size: 0.82rem; }
+
+.score-card-overall {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.score-card-number {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+}
+.score-card-proficiency {
+  font-size: 0.78rem;
+  font-weight: 600;
+  opacity: 0.8;
+  margin-top: 2px;
+}
+
+.score-card-bars { display: flex; flex-direction: column; gap: var(--space-sm); }
+
+.score-bar-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.score-bar-label {
+  width: 70px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.score-bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+.score-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.score-bar-value {
+  width: 30px;
+  text-align: right;
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+}
+
+.score-card-feedback {
+  margin-top: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--color-primary);
+}
+.score-card-feedback-label { font-size: 0.75rem; margin-bottom: 4px; }
+.score-card-feedback-text  { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; }
